@@ -33,7 +33,10 @@ function TabNavigator(): React.JSX.Element {
       <Tab.Screen
         name="职位"
         component={JobIndex}
-        options={getTabScreenOptions('职位', 'briefcase')}
+        options={{
+          ...getTabScreenOptions('职位', 'briefcase'),
+          headerShown: false,
+        }}
       />
       <Tab.Screen
         name="有了"

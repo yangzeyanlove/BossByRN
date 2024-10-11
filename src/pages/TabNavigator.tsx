@@ -23,6 +23,11 @@ function TabNavigator(): React.JSX.Element {
   return (
     <Tab.Navigator
       screenOptions={{
+        tabBarLabelStyle: {
+          marginTop: -4,
+          marginBottom: 4,
+        },
+        tabBarInactiveTintColor: '#B8B8B8', // 未选中时的颜色
         tabBarActiveTintColor: themeConfig.PrimaryColor, // 选中时的颜色
       }}>
       <Tab.Screen

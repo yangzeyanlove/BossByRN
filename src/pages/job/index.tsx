@@ -1,10 +1,13 @@
 import React from 'react';
 import {
-  Text,
+  // Text,
   // View,
+  Button,
   FlatList,
 } from 'react-native';
-// import type {PropsWithChildren} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../types/global';
 
 const data = [
   {id: '1', title: 'Item 1'},
@@ -49,13 +52,29 @@ const data = [
   {id: '3', title: 'Item 3'},
 ];
 
-const Item = ({title}: {title: string}) => <Text>{title}</Text>;
+export type HomeScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Home'
+>;
 
 function Index(): React.JSX.Element {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
+
+  // const handlePress = () => {
+  //   // navigation.push('JobDetail');
+  //   navigation.navigate('JobDetail');
+  // };
+
   return (
     <FlatList
       data={data}
-      renderItem={({item}) => <Item title={item.title} />}
+      renderItem={({item}) => (
+        // <Text onPress={() => handlePress}>{item.title}</Text>
+        <Button
+          title={item.title}
+          onPress={() => navigation.navigate('JobDetail')}
+        />
+      )}
       keyExtractor={() => Math.random().toString(36)}
     />
   );

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -14,9 +14,11 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../types/global';
 import Header from './header';
-import request from '../../common/request';
 import ThemeConfig from '../../config/theme';
 import SizeBox from '../../components/size-box';
+
+import {observer} from 'mobx-react-lite';
+import jobListStore from '../../mobx-store/job-list';
 
 // const data = Array.from({length: 100}, (_, index) => ({
 //   id: index + 1, // 生成从1开始的唯一ID
@@ -158,10 +160,7 @@ const ItemInfo = ({info}: {info: any}) => {
   );
 };
 
-function Index(): React.JSX.Element {
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [refreshing, setRefreshing] = useState<boolean>(false);
+const Index: React.FC = observer(() => {
   // 获取 FlatList 的引用
   const flatListRef = useRef<FlatList>(null);
 
@@ -178,56 +177,17 @@ function Index(): React.JSX.Element {
     );
   };
 
-  const fetchData = async (isRefresh = false) => {
-    // console.log(isRefresh);
-    if (loading) {
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await request({
-        url: 'https://result.eolink.com/1PU8uLH9435a64bcd63e35fcb4dd6948bff5e7ebb444977?uri=/job/new-list',
-      });
-
-      if (res && res.zpData && res.zpData.jobList) {
-        setItems(prevState =>
-          isRefresh
-            ? res.zpData.jobList
-            : [...prevState, ...res.zpData.jobList],
-        );
-      }
-      setLoading(false);
-      setRefreshing(false);
-    } catch (err) {
-      setLoading(false);
-      setRefreshing(false);
-      console.error(err);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
-
-  // 处理滚动到底部事件
-  const handleLoadMore = () => {
-    if (!loading) {
-      fetchData();
-    }
-  };
-
   // 下拉刷新处理函数
   const handleRefresh = () => {
     // 让 FlatList 滚动回到顶部
     flatListRef.current?.scrollToOffset({animated: true, offset: 0});
     // 刷新动画
-    setRefreshing(true);
-    fetchData(true); // 传递 true 表示是下拉刷新
+    jobListStore.fetchData(true); // 传递 true 表示是下拉刷新
   };
 
   useEffect(() => {
     console.log('useEffect fetching data...');
-    fetchData();
+    jobListStore.fetchData();
   }, []);
 
   return (
@@ -235,15 +195,15 @@ function Index(): React.JSX.Element {
       <Header onFilterChange={handleRefresh} />
       <FlatList
         ref={flatListRef} // 绑定 flatListRef 用于控制滚动
-        data={items}
+        data={jobListStore.list}
         renderItem={({item}) => <ItemInfo info={item} />}
         keyExtractor={() => Math.random().toString(36)}
-        onEndReached={handleLoadMore}
+        onEndReached={() => jobListStore.fetchData()}
         onEndReachedThreshold={0.5} // 当距离底部还有 50% 时触发
         ListFooterComponent={getFooter}
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
+            refreshing={jobListStore.refreshing}
             onRefresh={handleRefresh} // 下拉刷新回调
             colors={[ThemeConfig.PrimaryColor]} // 刷新时的指示器颜色
           />
@@ -252,6 +212,6 @@ function Index(): React.JSX.Element {
       <SizeBox height={10} />
     </View>
   );
-}
+});
 
 export default Index;

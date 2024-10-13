@@ -68,7 +68,11 @@ const styles = StyleSheet.create({
   },
 });
 
-function JobHeader(): React.JSX.Element {
+interface JobHeaderProps {
+  onFilterChange: (type: string) => void; // 定义父组件传递的方法类型
+}
+
+const JobHeader: React.FC<JobHeaderProps> = ({onFilterChange}) => {
   return (
     <>
       <LinearGradient
@@ -95,15 +99,15 @@ function JobHeader(): React.JSX.Element {
           {/* 底部 */}
           <View style={styles.headerBottom}>
             <View style={styles.bottomRow}>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={() => onFilterChange('all')}>
                 <Text>全部</Text>
               </TouchableOpacity>
               <SizeBox width={20} />
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={() => onFilterChange('nearby')}>
                 <Text>附近</Text>
               </TouchableOpacity>
               <SizeBox width={20} />
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={() => onFilterChange('newest')}>
                 <Text>最新</Text>
               </TouchableOpacity>
             </View>
@@ -123,6 +127,6 @@ function JobHeader(): React.JSX.Element {
       </LinearGradient>
     </>
   );
-}
+};
 
 export default JobHeader;

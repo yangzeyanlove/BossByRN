@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,6 +7,8 @@ import {
   FlatList,
   // SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -157,13 +159,29 @@ const ItemInfo = ({info}: {info: any}) => {
 };
 
 function Index(): React.JSX.Element {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  // 获取 FlatList 的引用
+  const flatListRef = useRef<FlatList>(null);
+
+  const getFooter = () => {
+    // return loading ? (
+    //   <View style={{padding: 20}}>
+    //     <ActivityIndicator size="large" />
+    //   </View>
+    // ) : null;
+    return (
+      <View style={{padding: 20}}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  };
 
   const fetchData = async (isRefresh = false) => {
-    console.log(isRefresh);
+    // console.log(isRefresh);
     if (loading) {
-      return false;
+      return;
     }
 
     setLoading(true);
@@ -173,15 +191,38 @@ function Index(): React.JSX.Element {
       });
 
       if (res && res.zpData && res.zpData.jobList) {
-        setItems(res.zpData.jobList);
+        setItems(prevState =>
+          isRefresh
+            ? res.zpData.jobList
+            : [...prevState, ...res.zpData.jobList],
+        );
       }
       setLoading(false);
+      setRefreshing(false);
     } catch (err) {
       setLoading(false);
+      setRefreshing(false);
       console.error(err);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
+  };
+
+  // 处理滚动到底部事件
+  const handleLoadMore = () => {
+    if (!loading) {
+      fetchData();
+    }
+  };
+
+  // 下拉刷新处理函数
+  const handleRefresh = () => {
+    // 让 FlatList 滚动回到顶部
+    flatListRef.current?.scrollToOffset({animated: true, offset: 0});
+    // 刷新动画
+    setRefreshing(true);
+    fetchData(true); // 传递 true 表示是下拉刷新
   };
 
   useEffect(() => {
@@ -191,15 +232,24 @@ function Index(): React.JSX.Element {
 
   return (
     <View style={styles.container}>
-      <Header />
+      <Header onFilterChange={handleRefresh} />
       <FlatList
+        ref={flatListRef} // 绑定 flatListRef 用于控制滚动
         data={items}
-        renderItem={({item}) => (
-          // <Text onPress={() => handlePress}>{item.title}</Text>
-          <ItemInfo info={item} />
-        )}
+        renderItem={({item}) => <ItemInfo info={item} />}
         keyExtractor={() => Math.random().toString(36)}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5} // 当距离底部还有 50% 时触发
+        ListFooterComponent={getFooter}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh} // 下拉刷新回调
+            colors={[ThemeConfig.PrimaryColor]} // 刷新时的指示器颜色
+          />
+        }
       />
+      <SizeBox height={10} />
     </View>
   );
 }

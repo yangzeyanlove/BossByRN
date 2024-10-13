@@ -35,8 +35,8 @@ class JobListStore {
         if (res && res.zpData && res.zpData.jobList) {
           this.list = isRefresh ? res.zpData.jobList : [...this.list, ...res.zpData.jobList];
         }
-        this.loading = false;
-        this.refreshing = false;
+        // this.loading = false;
+        // this.refreshing = false;
       });
     } catch (error) {
       runInAction(() => {

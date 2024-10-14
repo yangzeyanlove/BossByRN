@@ -81,11 +81,6 @@ const JobHeader: React.FC<JobHeaderProps> = ({onFilterChange}) => {
         end={{x: 0.5, y: 0.5}} // 渐变终点
         locations={[0, 0.5, 1]} // 每种颜色对应的百分比位置
       >
-        <StatusBar
-          barStyle="dark-content" // enum('default', 'light-content', 'dark-content')
-          translucent={true} // 应用会延伸到状态栏之下绘制
-          backgroundColor="transparent"
-        />
         <SafeAreaView>
           {/* 顶部 */}
           <View style={styles.headerTop}>

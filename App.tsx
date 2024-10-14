@@ -1,4 +1,5 @@
 import React from 'react';
+import {StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import TabNavigator from './src/pages/TabNavigator';
@@ -11,6 +12,12 @@ const Stack = createNativeStackNavigator();
 export default function App(): React.JSX.Element {
   return (
     <NavigationContainer>
+      <StatusBar
+        barStyle="dark-content" // enum('default', 'light-content', 'dark-content')
+        translucent={true} // 应用会延伸到状态栏之下绘制
+        backgroundColor="transparent"
+      />
+
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
           name="Home"

@@ -178,8 +178,11 @@ const JobDetail: React.FC<JobItemProps> = ({navigation, route}) => {
 - 提供丰富的培训和职业发展机会。
 - 良好的工作环境和团队氛围。`;
 
-  const getLocation = (): string =>
-    JoinString([info.cityName, info.areaDistrict, info.businessDistrict]);
+  const getLocation = (separator = ''): string =>
+    JoinString(
+      [info.cityName, info.areaDistrict, info.businessDistrict],
+      separator,
+    );
 
   return (
     <View style={styles.container}>
@@ -201,7 +204,7 @@ const JobDetail: React.FC<JobItemProps> = ({navigation, route}) => {
         <Row>
           <Icons name="location" size={16} color="#B9B9B9" />
           <SizeBox width={3} />
-          <Text style={styles.colorGrey}>{getLocation()}</Text>
+          <Text style={styles.colorGrey}>{getLocation('·')}</Text>
           <SizeBox width={15} />
           <Icons name="bag" size={16} color="#B9B9B9" />
           <SizeBox width={3} />

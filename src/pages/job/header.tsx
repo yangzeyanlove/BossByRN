@@ -1,22 +1,14 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  StatusBar,
-  TouchableOpacity,
-} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
 import SizeBox from '../../components/size-box';
 import Row from '../../components/row';
+import HeaderWrap from '../../components/header-wrap';
 
 const styles = StyleSheet.create({
   headerTop: {
     paddingHorizontal: 18,
     paddingTop: 4,
-    marginTop: StatusBar.currentHeight, // 内容从状态栏下面开始
   },
   title: {
     fontSize: 24,
@@ -63,53 +55,44 @@ interface JobHeaderProps {
 
 const JobHeader: React.FC<JobHeaderProps> = ({onFilterChange}) => {
   return (
-    <>
-      <LinearGradient
-        colors={['#6AD9D8', '#ACEAEA', 'white']}
-        start={{x: 0.5, y: 0}} // 渐变起点
-        end={{x: 0.5, y: 0.5}} // 渐变终点
-        locations={[0, 0.5, 1]} // 每种颜色对应的百分比位置
-      >
-        <SafeAreaView>
-          {/* 顶部 */}
-          <Row between style={styles.headerTop}>
-            <Text style={styles.title}>前端开发工程师</Text>
-            <Row>
-              <Icons name="add" style={styles.icon} />
-              <SizeBox width={18} />
-              <Icons name="search" style={styles.icon} />
-            </Row>
-          </Row>
-          {/* 底部 */}
-          <Row between style={styles.headerBottom}>
-            <Row>
-              <TouchableOpacity onPress={() => onFilterChange('all')}>
-                <Text>全部</Text>
-              </TouchableOpacity>
-              <SizeBox width={20} />
-              <TouchableOpacity onPress={() => onFilterChange('nearby')}>
-                <Text>附近</Text>
-              </TouchableOpacity>
-              <SizeBox width={20} />
-              <TouchableOpacity onPress={() => onFilterChange('newest')}>
-                <Text>最新</Text>
-              </TouchableOpacity>
-            </Row>
-            <Row>
-              <View style={styles.filterBtn}>
-                <Text style={styles.filterTxt}>深圳</Text>
-                <View style={styles.triangle} />
-              </View>
-              <SizeBox width={10} />
-              <View style={styles.filterBtn}>
-                <Text style={styles.filterTxt}>筛选</Text>
-                <View style={styles.triangle} />
-              </View>
-            </Row>
-          </Row>
-        </SafeAreaView>
-      </LinearGradient>
-    </>
+    <HeaderWrap>
+      {/* 顶部 */}
+      <Row between style={styles.headerTop}>
+        <Text style={styles.title}>前端开发工程师</Text>
+        <Row>
+          <Icons name="add" style={styles.icon} />
+          <SizeBox width={18} />
+          <Icons name="search" style={styles.icon} />
+        </Row>
+      </Row>
+      {/* 底部 */}
+      <Row between style={styles.headerBottom}>
+        <Row>
+          <TouchableOpacity onPress={() => onFilterChange('all')}>
+            <Text>全部</Text>
+          </TouchableOpacity>
+          <SizeBox width={20} />
+          <TouchableOpacity onPress={() => onFilterChange('nearby')}>
+            <Text>附近</Text>
+          </TouchableOpacity>
+          <SizeBox width={20} />
+          <TouchableOpacity onPress={() => onFilterChange('newest')}>
+            <Text>最新</Text>
+          </TouchableOpacity>
+        </Row>
+        <Row>
+          <View style={styles.filterBtn}>
+            <Text style={styles.filterTxt}>深圳</Text>
+            <View style={styles.triangle} />
+          </View>
+          <SizeBox width={10} />
+          <View style={styles.filterBtn}>
+            <Text style={styles.filterTxt}>筛选</Text>
+            <View style={styles.triangle} />
+          </View>
+        </Row>
+      </Row>
+    </HeaderWrap>
   );
 };
 

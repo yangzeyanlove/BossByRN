@@ -10,37 +10,26 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/Ionicons';
 import SizeBox from '../../components/size-box';
+import Row from '../../components/row';
 
 const styles = StyleSheet.create({
   headerTop: {
     paddingHorizontal: 18,
     paddingTop: 4,
     marginTop: StatusBar.currentHeight, // 内容从状态栏下面开始
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-  },
-  headerTopRight: {
-    flexDirection: 'row',
   },
   icon: {
     fontWeight: 'bold',
     fontSize: 28,
   },
   headerBottom: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     paddingHorizontal: 18,
     paddingTop: 14,
     paddingBottom: 8,
-  },
-  bottomRow: {
-    flexDirection: 'row',
   },
   filterBtn: {
     position: 'relative',
@@ -83,17 +72,17 @@ const JobHeader: React.FC<JobHeaderProps> = ({onFilterChange}) => {
       >
         <SafeAreaView>
           {/* 顶部 */}
-          <View style={styles.headerTop}>
+          <Row between style={styles.headerTop}>
             <Text style={styles.title}>前端开发工程师</Text>
-            <View style={styles.headerTopRight}>
+            <Row>
               <Icons name="add" style={styles.icon} />
               <SizeBox width={18} />
               <Icons name="search" style={styles.icon} />
-            </View>
-          </View>
+            </Row>
+          </Row>
           {/* 底部 */}
-          <View style={styles.headerBottom}>
-            <View style={styles.bottomRow}>
+          <Row between style={styles.headerBottom}>
+            <Row>
               <TouchableOpacity onPress={() => onFilterChange('all')}>
                 <Text>全部</Text>
               </TouchableOpacity>
@@ -105,8 +94,8 @@ const JobHeader: React.FC<JobHeaderProps> = ({onFilterChange}) => {
               <TouchableOpacity onPress={() => onFilterChange('newest')}>
                 <Text>最新</Text>
               </TouchableOpacity>
-            </View>
-            <View style={styles.bottomRow}>
+            </Row>
+            <Row>
               <View style={styles.filterBtn}>
                 <Text style={styles.filterTxt}>深圳</Text>
                 <View style={styles.triangle} />
@@ -116,8 +105,8 @@ const JobHeader: React.FC<JobHeaderProps> = ({onFilterChange}) => {
                 <Text style={styles.filterTxt}>筛选</Text>
                 <View style={styles.triangle} />
               </View>
-            </View>
-          </View>
+            </Row>
+          </Row>
         </SafeAreaView>
       </LinearGradient>
     </>

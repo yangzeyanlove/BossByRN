@@ -7,8 +7,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../types/global';
+import {HomeScreenNavigationProp} from '../../types/global';
 import Header from './header';
 import ThemeConfig from '../../config/theme';
 import SizeBox from '../../components/size-box';
@@ -21,11 +20,6 @@ import jobListStore from '../../mobx-store/job-list';
 //   id: index + 1, // 生成从1开始的唯一ID
 //   title: `Title ${index + 1}`,
 // }));
-
-export type HomeScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'Home'
->;
 
 const styles = StyleSheet.create({
   container: {
@@ -40,8 +34,8 @@ const Index: React.FC = observer(() => {
   // 获取 FlatList 的引用
   const flatListRef = useRef<FlatList>(null);
   const navigation = useNavigation<HomeScreenNavigationProp>();
-  const goToDetail = () => {
-    navigation.push('JobDetail');
+  const goToDetail = (data: any) => {
+    navigation.push('JobDetail', data);
   };
 
   // 下拉刷新处理函数
@@ -64,7 +58,7 @@ const Index: React.FC = observer(() => {
         ref={flatListRef} // 绑定 flatListRef 用于控制滚动
         data={jobListStore.list}
         renderItem={({item}) => (
-          <JobItem info={item} onPressHandler={goToDetail} />
+          <JobItem info={item} onPressHandler={() => goToDetail(item)} />
         )}
         keyExtractor={() => Math.random().toString(36)}
         onEndReached={() => jobListStore.fetchData()}

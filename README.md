@@ -18,6 +18,7 @@ src/                  // - 这是存放所有应用程序逻辑的地方，通�
   common/             // - 常用工具类，例如请求封装，缓存封装等等
   components/         // - 公共的组件
   config/             // - 配置文件
+  mobx-store/         // - 状态管理
   pages/              // - 所有页面的入口文件
   types/              // - typescript公共类型
 App.tsx;              // - 应用程序入口点文件。

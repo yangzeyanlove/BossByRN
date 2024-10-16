@@ -41,17 +41,27 @@ function TabNavigator(): React.JSX.Element {
       <Tab.Screen
         name="有了"
         component={HaveIndex}
-        options={getTabScreenOptions('有了', 'book')}
+        options={{
+          ...getTabScreenOptions('有了', 'book'),
+          headerShown: false,
+        }}
       />
       <Tab.Screen
         name="消息"
         component={MessageIndex}
-        options={{...getTabScreenOptions('消息', 'chatbox'), tabBarBadge: 3}}
+        options={{
+          ...getTabScreenOptions('消息', 'chatbox'),
+          headerShown: false,
+          tabBarBadge: 3,
+        }}
       />
       <Tab.Screen
         name="我的"
         component={MyIndex}
-        options={getTabScreenOptions('我的', 'person-circle')}
+        options={{
+          ...getTabScreenOptions('我的', 'person-circle'),
+          headerShown: false,
+        }}
       />
     </Tab.Navigator>
   );

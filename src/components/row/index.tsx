@@ -7,6 +7,8 @@ interface RowProps {
   // itemStyle?: StyleProp<ViewStyle>; // 可选的样式，用于自定义容器的样式
   // spacing?: number; // 子元素之间的间距
   between?: boolean; // 是否使用 justify-between 布局
+  center?: boolean;
+  flexNum?: number;
 }
 
 const Row: React.FC<RowProps> = ({
@@ -15,6 +17,8 @@ const Row: React.FC<RowProps> = ({
   // itemStyle,
   // spacing = 0,
   between = false,
+  center = false,
+  flexNum = 0,
 }) => {
   let _style = {};
   // 为每个子元素添加边距，并过滤掉 null 或 undefined 的元素
@@ -31,7 +35,13 @@ const Row: React.FC<RowProps> = ({
   // });
 
   if (between) {
-    _style = {justifyContent: 'space-between'};
+    _style = {..._style, justifyContent: 'space-between'};
+  }
+  if (center) {
+    _style = {..._style, justifyContent: 'center'};
+  }
+  if (flexNum) {
+    _style = {..._style, flex: flexNum};
   }
 
   return <View style={[styles.container, style, {..._style}]}>{children}</View>;

@@ -8,6 +8,7 @@ import haveTopListStore from '../../mobx-store/have-top-list';
 import {IHaveItem} from './types';
 import VideoPlayer from '../../components/video-player';
 import FoldText from '../../components/fold-text';
+import ThemeConfig from '../../config/theme';
 
 const styles = StyleSheet.create({
   item: {
@@ -56,6 +57,7 @@ const Item: React.FC<IItemProps> = ({data}) => {
         style={{fontSize: 15, color: '#454545', lineHeight: 24}}
         text={data.content}
         numberOfLines={3}
+        btnColor={ThemeConfig.PrimaryColor}
       />
       <SizeBox height={10} />
       {/* 媒体，图片/视频 */}

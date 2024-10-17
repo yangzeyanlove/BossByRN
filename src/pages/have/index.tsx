@@ -90,7 +90,7 @@ const renderTabBar = (props: TabBarProps<Route>) => {
 
 const Header: React.FC = () => {
   return (
-    <HeaderWrap>
+    <HeaderWrap endY={0.8}>
       <SizeBox height={5} />
       <Row style={styles.container}>
         <Text style={styles.title}>有了</Text>
@@ -129,6 +129,7 @@ const Index: React.FC = () => {
     <>
       <Header />
       <TabView
+        lazy={true} // Enable lazy loading of tabs
         navigationState={{index, routes}}
         renderTabBar={renderTabBar}
         renderScene={SceneMap(map)}

@@ -1,95 +1,83 @@
 import React, {useState} from 'react';
 import {
-  Text,
   View,
+  Text,
+  StyleSheet,
+  TextStyle,
+  StyleProp,
   TextLayoutEventData,
   LayoutChangeEvent,
-  TextStyle,
 } from 'react-native';
 
-interface IFoldTextProps {
-  style?: TextStyle;
-  text?: string;
-  numberOfLines?: number;
+interface FoldTextProps {
+  style?: StyleProp<TextStyle>; // 可选的样式，用于自定义容器的样式
+  text: string;
+  numberOfLines: number;
   btnColor: string;
 }
-const FoldText: React.FC<IFoldTextProps> = ({
+
+const FoldText: React.FC<FoldTextProps> = ({
   style,
   text,
-  numberOfLines = 3,
+  numberOfLines,
   btnColor,
 }) => {
+  const [isTruncated, setIsTruncated] = useState<boolean>(false);
+  const [isFold, setIsFold] = useState<boolean>(false);
   const [textWidth, setTextWidth] = useState<number>(0);
-  const [isOverLine, setIsOverLine] = useState(false);
-  const [lines, setLines] = useState<string[]>([]);
-  const hasCalculated = React.useRef(false); // 引入 useRef 来追踪是否已计算
-  const [cutLen, setCutLen] = useState(0);
-  // 插入的内容
-  const [isFold, setIsFold] = useState(true);
-  const insertChar = isFold ? '展开' : '收起';
-  const overStr = isFold ? '...' : '';
-
+  const [currenWidth, setCurrenWidth] = useState<number>(0);
   // 获取Text组件的宽度
   const handleLayout = (event: LayoutChangeEvent) =>
     setTextWidth(event.nativeEvent.layout.width);
-
   const handleTextLayout = (event: {nativeEvent: TextLayoutEventData}) => {
-    if (hasCalculated.current) {
-      return; // 如果已经计算过，直接返回
-    }
-
     const {lines: layoutLines} = event.nativeEvent;
-    if (!isOverLine && layoutLines.length >= numberOfLines) {
-      // 获取到所有换行内容后进行处理
-      const actualLines = layoutLines.map(line => line.text);
-
-      // 判断第三行的宽度是否足够
-      const currentLineWidth = layoutLines[numberOfLines - 1].width;
-
-      // 如果第三行宽度不足，裁剪内容，省略号算一个长度
-      const insertCharLength = insertChar.length + 1;
-      if (currentLineWidth + insertCharLength * 8 >= textWidth) {
-        // 动态裁剪第三行文本（大概估算每个字的宽度为8个单位）
-        setCutLen(Math.floor((textWidth - insertCharLength * 8) / 8));
-      }
-
-      setLines(actualLines);
-      setIsOverLine(true);
-      hasCalculated.current = true; // 标记已计算
+    // 判断第三行的宽度是否足够
+    if (layoutLines.length > numberOfLines) {
+      setIsTruncated(true);
+      setCurrenWidth(layoutLines[numberOfLines - 1].width);
     }
-  };
-
-  const renderDisplayText = () => {
-    const arr = isFold ? lines.slice(0, numberOfLines) : lines;
-    // 根据是否需要显示省略号来决定显示内容
-    return arr.map((line, index) => (
-      <Text key={index}>
-        {isFold && index === numberOfLines - 1
-          ? line.trimEnd().slice(0, cutLen)
-          : line}
-      </Text>
-    ));
   };
 
   return (
-    <View onLayout={handleLayout}>
-      <Text style={style} onTextLayout={handleTextLayout}>
-        {isOverLine
-          ? [
-              renderDisplayText(),
-              <Text key="slh">{overStr}</Text>,
-              <Text
-                key="btn"
-                style={{color: btnColor}}
-                onPress={() => setIsFold(!isFold)}>
-                {insertChar + '\n'}
-              </Text>,
-            ]
-          : // 先显示完整文本，等到获取布局信息
-            text}
+    <View style={styles.container} onLayout={handleLayout}>
+      <Text
+        style={[style]}
+        onTextLayout={handleTextLayout}
+        numberOfLines={isFold ? undefined : numberOfLines}>
+        {text}
       </Text>
+      {isTruncated ? (
+        <Text
+          style={[
+            style,
+            styles.truncatedText,
+            {
+              color: btnColor,
+              right:
+                textWidth - currenWidth - 45 > 0
+                  ? textWidth - currenWidth - 45
+                  : 0,
+            },
+          ]}
+          onPress={() => setIsFold(!isFold)}>
+          {isFold ? '收起' : '展开'}
+        </Text>
+      ) : null}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    position: 'relative',
+  },
+  truncatedText: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', // 确保背景色与文本背景相同
+    paddingLeft: 10,
+  },
+});
 
 export default FoldText;

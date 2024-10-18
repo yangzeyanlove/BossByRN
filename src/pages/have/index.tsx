@@ -15,11 +15,12 @@ import SizeBox from '../../components/size-box';
 import ThemeConfig from '../../config/theme';
 import TopList from './top-list';
 import GoodArticleList from './good-article';
+import WaitAnswer from './wait-answer';
 
 const tabConfig = [
   {key: 'one', title: '精选', component: TopList},
   {key: 'two', title: '好文', component: GoodArticleList},
-  {key: 'three', title: '等你来答', component: TopList},
+  {key: 'three', title: '等你来答', component: WaitAnswer},
   {key: 'four', title: '求职', component: TopList},
   {key: 'five', title: '直播', component: TopList},
   {key: 'six', title: '关注', component: TopList},

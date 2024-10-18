@@ -35,3 +35,10 @@ export interface IGoodArticleItem {
   collectCount: number;
   likeCount: number;
 }
+
+export interface IWaitAnswerItem {
+  question: string;
+  answerList: [];
+  answerCount: number;
+  viewCount: number;
+}

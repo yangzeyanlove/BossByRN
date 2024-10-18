@@ -10,9 +10,6 @@ import {
 import Icons from 'react-native-vector-icons/Ionicons';
 import Row from '../../components/row';
 import SizeBox from '../../components/size-box';
-import VideoPlayer from '../../components/video-player';
-import FoldText from '../../components/fold-text';
-import ThemeConfig from '../../config/theme';
 
 import {IWaitAnswerItem} from './types';
 import {observer} from 'mobx-react-lite';
@@ -43,21 +40,14 @@ const Item: React.FC<IItemProps> = ({data}) => {
 
       <Row between>
         <Row>
-          <Image
-            source={{uri: answerList[0]}}
-            style={{width: 20, height: 20, borderRadius: 25}}
-          />
-          <SizeBox width={4} />
-          <Image
-            source={{uri: answerList[1]}}
-            style={{width: 20, height: 20, borderRadius: 25}}
-          />
-          <SizeBox width={4} />
-          <Image
-            source={{uri: answerList[2]}}
-            style={{width: 20, height: 20, borderRadius: 25}}
-          />
-          <SizeBox width={4} />
+          {answerList.map(item => [
+            <Image
+              key={item}
+              source={{uri: item}}
+              style={{width: 20, height: 20, borderRadius: 25}}
+            />,
+            <SizeBox key={item + 'box'} width={4} />,
+          ])}
           <Text style={{fontSize: 12, color: '#888'}}>
             等{data.answerCount}人参与讨论
           </Text>

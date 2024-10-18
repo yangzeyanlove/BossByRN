@@ -1,28 +1,31 @@
 import * as React from 'react';
-import {Text, Image, useWindowDimensions, StyleSheet} from 'react-native';
 import {
-  TabBar,
-  TabBarItem,
-  TabView,
-  SceneMap,
-  TabBarProps,
-} from 'react-native-tab-view';
+  Text,
+  // View,
+  Image,
+  useWindowDimensions,
+  StyleSheet,
+  // ActivityIndicator,
+} from 'react-native';
+import {TabBar, TabBarItem, TabView, TabBarProps} from 'react-native-tab-view';
 import HeaderWrap from '../../components/header-wrap';
 import Icons from 'react-native-vector-icons/Ionicons';
 import Row from '../../components/row';
 import SizeBox from '../../components/size-box';
-import TopList from './top-list';
 import ThemeConfig from '../../config/theme';
+import TopList from './top-list';
+import GoodArticleList from './good-article';
 
 const tabConfig = [
   {key: 'one', title: '精选', component: TopList},
-  {key: 'two', title: '好文', component: TopList},
+  {key: 'two', title: '好文', component: GoodArticleList},
   {key: 'three', title: '等你来答', component: TopList},
   {key: 'four', title: '求职', component: TopList},
   {key: 'five', title: '直播', component: TopList},
   {key: 'six', title: '关注', component: TopList},
   {key: 'seven', title: '其他', component: TopList},
 ];
+const tabMap = Object.fromEntries(tabConfig.map(item => [item.key, item]));
 
 // 定义路由的类型
 type Route = {
@@ -114,25 +117,46 @@ const Header: React.FC = () => {
     </HeaderWrap>
   );
 };
+
+// const LoadingHolder: React.FC = () => {
+//   return (
+//     <View
+//       style={{
+//         width: useWindowDimensions().width,
+//       }}>
+//       <ActivityIndicator size="large" />
+//     </View>
+//   );
+// };
+
 const Index: React.FC = () => {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
-  const routes: Route[] = [];
-  const map: {[key: string]: React.FC} = {};
+  const [routes] = React.useState(tabConfig);
+  // const [loaded, setLoaded] = React.useState([tabConfig[0].key]);
 
-  tabConfig.forEach(item => {
-    routes.push({key: item.key, title: item.title});
-    map[item.key] = item.component;
-  });
+  const renderScene = ({route}: {route: Route}) => {
+    // const isLoaded = loaded.includes(route.key);
+    // 如果当前index不是route对应的，且没有加载过，返回loading
+    // if (tabConfig[index].key !== route.key && !isLoaded) {
+    //   return <LoadingHolder />;
+    // }
+    // // 记录组件key，已经加载过
+    // if (!isLoaded) {
+    //   setLoaded([...loaded, route.key]);
+    // }
+    return React.createElement(tabMap[route.key].component);
+  };
 
   return (
     <>
       <Header />
       <TabView
-        lazy={true} // Enable lazy loading of tabs
+        // lazy={true} // Enable lazy loading of tabs
         navigationState={{index, routes}}
         renderTabBar={renderTabBar}
-        renderScene={SceneMap(map)}
+        // renderScene={SceneMap(map)}
+        renderScene={renderScene}
         onIndexChange={setIndex}
         initialLayout={{width: layout.width}}
       />

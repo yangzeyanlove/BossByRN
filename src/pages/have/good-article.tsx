@@ -1,19 +1,21 @@
+/**
+ * 好文列表
+ */
 import React from 'react';
 import {
   View,
   Text,
+  Image,
   FlatList,
   StyleSheet,
-  Image,
   ActivityIndicator,
 } from 'react-native';
+import goodArticleListStore from '../../mobx-store/good-article-list';
+import {observer} from 'mobx-react-lite';
 import Icons from 'react-native-vector-icons/Ionicons';
 import Row from '../../components/row';
 import SizeBox from '../../components/size-box';
-import {observer} from 'mobx-react-lite';
-import haveTopListStore from '../../mobx-store/have-top-list';
-import {IHaveItem} from './types';
-import VideoPlayer from '../../components/video-player';
+import {IGoodArticleItem} from './types';
 import FoldText from '../../components/fold-text';
 import ThemeConfig from '../../config/theme';
 
@@ -29,13 +31,11 @@ const styles = StyleSheet.create({
 });
 
 interface IItemProps {
-  data: IHaveItem;
+  data: IGoodArticleItem;
 }
 const Item: React.FC<IItemProps> = ({data}) => {
   const postUserInfo = data.postUserInfo;
-  const picList = data.picList || [];
   const coverImg = data.coverImg;
-  const fileInfo = data.file;
 
   return (
     <View style={styles.item}>
@@ -48,7 +48,7 @@ const Item: React.FC<IItemProps> = ({data}) => {
           />
           <SizeBox width={7} />
           <View>
-            <Text>{postUserInfo.bcName}</Text>
+            <Text>{postUserInfo.nickname}</Text>
             {postUserInfo.subTitle ? (
               <Text style={{fontSize: 12, color: '#888888'}}>
                 {postUserInfo.subTitle}
@@ -58,31 +58,27 @@ const Item: React.FC<IItemProps> = ({data}) => {
         </Row>
         <Icons name="ellipsis-horizontal" size={16} color="#888888" />
       </Row>
+      <SizeBox height={10} />
+      {/* 标题展示 */}
+      <Text style={{fontSize: 16, fontWeight: '500'}}>{data.title}</Text>
       {/* 发布内容 */}
-      <SizeBox height={10} />
-      <FoldText
-        style={{fontSize: 15, color: '#454545', lineHeight: 24}}
-        text={data.content}
-        numberOfLines={3}
-        btnColor={ThemeConfig.PrimaryColor}
-      />
-      <SizeBox height={10} />
-      {/* 媒体，图片/视频 */}
-      {picList.length ? (
-        <>
-          <Image
-            source={{uri: picList[0]['thumbnailUrl']}}
-            style={{width: 120, height: 200, borderRadius: 10}}
+      <SizeBox height={8} />
+      <Row between style={{alignItems: 'flex-start'}}>
+        <View style={{flex: 1}}>
+          <FoldText
+            style={{fontSize: 15, color: '#454545', lineHeight: 24}}
+            text={data.content}
+            numberOfLines={3}
+            btnColor={ThemeConfig.PrimaryColor}
           />
-          <SizeBox height={10} />
-        </>
-      ) : null}
-      {/* 视频 */}
-      {coverImg != null && fileInfo != null && fileInfo.url ? (
-        <View style={{width: 120, height: 200}}>
-          <VideoPlayer key={data.addTime} uri={fileInfo.url} />
         </View>
-      ) : null}
+        <SizeBox width={8} />
+        <Image
+          source={{uri: coverImg.thumbnailUrl}}
+          style={{width: 100, height: 70, borderRadius: 10}}
+        />
+      </Row>
+      <SizeBox height={10} />
       <Row>
         <Row center flexNum={1}>
           <Icons name="chatbox-outline" size={16} color="#888888" />
@@ -108,20 +104,20 @@ const Item: React.FC<IItemProps> = ({data}) => {
   );
 };
 
-const TopList: React.FC = observer(() => {
+const GoodArticle: React.FC = observer(() => {
   React.useEffect(() => {
-    haveTopListStore.fetchData();
+    goodArticleListStore.fetchData();
   }, []);
 
-  return haveTopListStore.loading ? (
+  return goodArticleListStore.loading ? (
     <ActivityIndicator size="large" />
   ) : (
     <FlatList
       keyExtractor={() => Math.random().toString(36)}
-      data={haveTopListStore.list}
+      data={goodArticleListStore.list}
       renderItem={({item}) => <Item data={item} />}
     />
   );
 });
 
-export default React.memo(TopList);
+export default React.memo(GoodArticle);

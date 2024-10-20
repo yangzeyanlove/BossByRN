@@ -12,10 +12,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 10,
-    paddingHorizontal: 18,
   },
   item: {
     paddingVertical: 15,
+    paddingHorizontal: 18,
   },
   avatar: {
     width: 50,
@@ -103,6 +103,7 @@ const ChatList: React.FC<IChatListProps> = observer(({dataType}) => {
   return (
     <View style={styles.container}>
       <FlatList
+        nestedScrollEnabled={true}
         keyExtractor={() => Math.random().toString(36)}
         data={dataType === 'one' ? chatStore.allData : chatStore.list}
         renderItem={({item}) => <Item data={item} />}

@@ -4,7 +4,7 @@ import Icons from 'react-native-vector-icons/Ionicons';
 import SizeBox from '../../components/size-box';
 import Row from '../../components/row';
 import HeaderWrap from '../../components/header-wrap';
-import jobListStore, {IJobTypeItem} from '../../mobx-store/job-list';
+import jobListStore from '../../mobx-store/job-list';
 
 const styles = StyleSheet.create({
   headerTop: {
@@ -50,11 +50,7 @@ const styles = StyleSheet.create({
   },
 });
 
-interface JobHeaderProps {
-  onFilterChange: (type: number) => void; // 定义父组件传递的方法类型
-}
-
-const JobHeader: React.FC<JobHeaderProps> = ({onFilterChange}) => {
+const JobHeader: React.FC = () => {
   return (
     <HeaderWrap>
       {/* 顶部 */}
@@ -69,14 +65,14 @@ const JobHeader: React.FC<JobHeaderProps> = ({onFilterChange}) => {
       {/* 底部 */}
       <Row between style={styles.headerBottom}>
         <Row>
-          {jobListStore.jobType.map((item: IJobTypeItem, index) => (
+          {jobListStore.jobType.map((item, index) => (
             <TouchableOpacity
-              key={index}
+              key={index + 'TouchableOpacity'}
               style={{marginRight: 20}}
-              onPress={() => onFilterChange(index)}>
+              onPress={() => jobListStore.changeCurrentType(index)}>
               <Text
                 style={{
-                  color: '#444',
+                  color: '#222',
                   fontWeight:
                     index === jobListStore.currentType ? '600' : '400',
                 }}>

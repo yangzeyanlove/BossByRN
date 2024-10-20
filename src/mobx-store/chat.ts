@@ -1,34 +1,41 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import request from '../common/request';
 
-export interface IJobTypeItem {
-  key: string;
-  value: string;
-}
-
-class JobListStore {
-  jobType: IJobTypeItem[] = [{
-    key: 'all',
-    value: '全部',
-  }, {
-    key: 'nearby',
-    value: '附近',
-  }, {
-    key: 'newest',
-    value: '最新',
-  }];
-  currentType: number = 0;
+class ChatStore {
+  allData: any[] = [];
   list: any[] = [];
   loading: boolean = false;
   refreshing: boolean = false;
+  // 其他数据
+  others = [
+    {
+      'uid': 1141998241,
+      'name': '易宝软件 发布了新职位',
+      'avatar': '',
+      'brandName': '',
+      'title': '',
+      'date': '09:33',
+      'type': '',
+      'content': '40位Boss新发布',
+      'isLatest': true,
+      'isNotice': false,
+    },
+    {
+      'uid': 1141998241,
+      'name': '通知',
+      'avatar': '',
+      'brandName': '系统通知',
+      'title': '',
+      'date': '星期四',
+      'type': '',
+      'content': '简历曝光将降低',
+      'isLatest': false,
+      'isNotice': true,
+    },
+  ];
 
   constructor() {
     makeAutoObservable(this);
-  }
-
-  changeCurrentType(index: number) {
-    console.log(new Date().getTime());
-    this.currentType = index;
   }
 
   // Action: 获取数据的逻辑
@@ -49,13 +56,14 @@ class JobListStore {
 
     try {
       const res = await request({
-        url: 'https://result.eolink.com/1PU8uLH9435a64bcd63e35fcb4dd6948bff5e7ebb444977?uri=/job/new-list',
+        url: 'https://result.eolink.com/1PU8uLH9435a64bcd63e35fcb4dd6948bff5e7ebb444977?uri=/chat/list-content',
       });
 
       runInAction(() => {
-        if (res && res.zpData && res.zpData.jobList) {
-          this.list = isRefresh ? res.zpData.jobList : [...this.list, ...res.zpData.jobList];
+        if (res && res.zpData && res.zpData.result) {
+          this.list = isRefresh ? res.zpData.result : [...this.list, ...res.zpData.result];
         }
+        this.allData = [...this.others, ...this.list];
         // this.loading = false;
         // this.refreshing = false;
       });
@@ -73,5 +81,4 @@ class JobListStore {
   }
 }
 
-const jobListStore = new JobListStore();
-export default jobListStore;
+export default new ChatStore();

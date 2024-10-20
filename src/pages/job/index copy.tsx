@@ -1,8 +1,18 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  // FlatList,
+  // ActivityIndicator,
+  // RefreshControl,
+} from 'react-native';
+// import {useNavigation} from '@react-navigation/native';
+// import {HomeScreenNavigationProp} from '../../types/global';
 import Header from './header';
+// import ThemeConfig from '../../config/theme';
 import SizeBox from '../../components/size-box';
-import JobList, {IJobListRef} from './list';
+// import JobItem from './job-item';
+import JobList from './list';
 
 import {observer} from 'mobx-react-lite';
 import jobListStore from '../../mobx-store/job-list';
@@ -22,20 +32,10 @@ const styles = StyleSheet.create({
 });
 
 const Index: React.FC = observer(() => {
-  // 获取 FlatList 的引用
-  const jobListRef = React.useRef<IJobListRef>(null);
-
-  // 下拉刷新处理函数
-  const handleRefresh = (index: number) => {
-    // 触发 列表刷新
-    jobListStore.changeCurrentType(index);
-    jobListRef.current?.doRefresh();
-  };
-
   return (
     <View style={styles.container}>
-      <Header onFilterChange={handleRefresh} />
-      <JobList ref={jobListRef} jobType={jobListStore.currentType} />
+      <Header />
+      <JobList currentIndex={jobListStore.currentType} />
       <SizeBox height={10} />
     </View>
   );

@@ -65,3 +65,8 @@ npm run ios
 # OR
 yarn ios
 ```
+
+# 效果图
+<img src="readme-file/1.png" alt="图像描述" width="30%"><img src="readme-file/2.png" alt="图像描述" width="30%"><img src="readme-file/3.png" alt="图像描述" width="30%"><img src="readme-file/4.png" alt="图像描述" width="30%"><img src="readme-file/5.png" alt="图像描述" width="30%">
+
+# 持续更新中......

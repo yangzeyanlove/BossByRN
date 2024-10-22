@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, Text, FlatList, Image, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import Row from '../../components/row';
 import Icons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
@@ -96,11 +103,11 @@ interface IChatListProps {
 }
 const ChatList: React.FC<IChatListProps> = observer(({dataType}) => {
   React.useEffect(() => {
-    console.log('useEffect fetching data...');
+    console.log('useEffect fetching data...', dataType);
     chatStore.fetchData();
-  }, []);
+  }, [dataType]);
 
-  return (
+  return dataType && chatStore.loadedTypeArr.includes(dataType) ? (
     <View style={styles.container}>
       <FlatList
         nestedScrollEnabled={true}
@@ -109,6 +116,8 @@ const ChatList: React.FC<IChatListProps> = observer(({dataType}) => {
         renderItem={({item}) => <Item data={item} />}
       />
     </View>
+  ) : (
+    <ActivityIndicator size="large" />
   );
 });
 

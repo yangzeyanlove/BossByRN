@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  useWindowDimensions,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
+import {Text, View, useWindowDimensions, StyleSheet} from 'react-native';
 import {TabBar, TabBarItem, TabView, TabBarProps} from 'react-native-tab-view';
 import {NestedScrollView, NestedScrollViewHeader} from '@sdcx/nested-scroll';
 import Row from '../../components/row';
@@ -13,6 +7,7 @@ import Icons from 'react-native-vector-icons/Ionicons';
 import SizeBox from '../../components/size-box';
 import ThemeConfig from '../../config/theme';
 import ChatList from './chat-list';
+import chatStore from '../../mobx-store/chat';
 
 // 定义路由的类型
 type Route = {
@@ -96,6 +91,10 @@ const Chat: React.FC = () => {
     });
   };
 
+  React.useEffect(() => {
+    chatStore.changeTab(index, tabConfig[index].key);
+  }, []);
+
   return (
     <NestedScrollView style={{backgroundColor: 'white'}}>
       <NestedScrollViewHeader>
@@ -112,7 +111,10 @@ const Chat: React.FC = () => {
         navigationState={{index, routes}}
         renderTabBar={renderTabBar}
         renderScene={renderScene}
-        onIndexChange={setIndex}
+        onIndexChange={id => {
+          setIndex(id);
+          chatStore.changeTab(id, tabConfig[id].key);
+        }}
         initialLayout={{width: layout.width}}
       />
     </NestedScrollView>

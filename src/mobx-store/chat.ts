@@ -6,6 +6,8 @@ class ChatStore {
   list: any[] = [];
   loading: boolean = false;
   refreshing: boolean = false;
+  currentIndex: number = 0;
+  loadedTypeArr: string[] = [];
   // 其他数据
   others = [
     {
@@ -36,6 +38,13 @@ class ChatStore {
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  changeTab(index: number, type: string) {
+    this.currentIndex = index;
+    if (!this.loadedTypeArr.includes(type)) {
+      this.loadedTypeArr.push(type);
+    }
   }
 
   // Action: 获取数据的逻辑
